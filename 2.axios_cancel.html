@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>axios 取消請求</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+</head>
+<body>
+    
+    <button onclick="getProducts1()">獲取商品列表1</button>
+    <button onclick="getProducts2()">獲取商品列表2</button>
+    <button onclick="cancelReq()">取消請求</button>
+
+    <script>
+
+        var cancel; // 用於保存取消請求的函數
+
+        function getProducts1 () {
+            axios({
+                url: 'http://localhost:3000/products1',
+                cancelToken: new axios.CancelToken(function executor(c){ // c => 用於取消當前請求的函數
+                    // 保存取消函數，用於之後可能需要取消當前請求
+                    cancel = c;
+                })
+            }).then(
+                res => {
+                    cancel = null;
+                    console.log('請求1成功 ', res.data);
+                },
+                err => {
+                    cancel = null;
+                    console.log('請求1失敗 ',err.message);
+                }
+            )
+        }
+
+        function getProducts2 () {
+            axios({
+                url: 'http://localhost:3000/products2',
+                cancelToken: new axios.CancelToken(function executor(c){ // c => 用於取消當前請求的函數
+                    // 保存取消函數，用於之後可能需要取消當前請求
+                    cancel = c;
+                })
+            }).then(res => {
+                console.log('請求2成功 ', res.data)
+            })
+        }
+
+        function cancelReq () {
+            if (typeof cancel === 'function') {
+                cancel('強制取消請求');
+            }
+        }
+    </script>
+
+</body>
+</html>
