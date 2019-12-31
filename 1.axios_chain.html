@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>axios 的處理流程及攔截器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+</head>
+<body>
+    
+    <script>
+        // 添加請求攔截器
+        axios.interceptors.request.use(
+            config => {
+                console.log('request interceptor1 onResolved()')
+                return config;
+            },
+            error => {
+                console.log('request interceptor1 onRejected()')
+                return Promise.reject(error);
+            }
+        )
+
+        axios.interceptors.request.use(
+            config => {
+                console.log('request interceptor2 onResolved()')
+                return config;
+            },
+            error => {
+                console.log('request interceptor2 onRejected()')
+                return Promise.reject(error);
+            }
+        )
+
+        // 添加響應攔截器
+        axios.interceptors.response.use(
+            res => {
+                console.log('response interceptor1 onResolved()')
+                return res;
+            },
+            err => {
+                console.log('response interceptor1 onRejected()')
+                return Promise.reject(error);
+            }
+        )
+
+        axios.interceptors.response.use(
+            res => {
+                console.log('response interceptor2 onResolved()')
+                return res;
+            },
+            err => {
+                console.log('response interceptor2 onRejected()')
+                return Promise.reject(error);
+            }
+        )
+
+        axios.get('https://jsonplaceholder.typicode.com/todos/1').then(res => {
+            console.log('data ', res.data)
+        }).catch(err => {
+            console.log('err ', err.message)
+        })    
+    </script>
+
+</body>
+</html>
